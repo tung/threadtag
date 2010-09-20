@@ -1,4 +1,5 @@
 *.swp
+*.db
 .bundle
 vendor/gems/gems
 vendor/gems/specifications
