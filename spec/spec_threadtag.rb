@@ -1,4 +1,6 @@
+ENV['RACK_ENV'] = 'test'
 require 'threadtag'
+
 require 'bacon'
 require 'rack/test'
 
@@ -8,7 +10,13 @@ end
 
 describe "The ThreadTag App" do
   def app
+    ThreadTag.set :migrations_log, File.open('/dev/null', 'wb')
     ThreadTag
+  end
+
+  before do
+    app.nuke_database! rescue nil
+    app.migrate
   end
 
   it "says hello world" do
