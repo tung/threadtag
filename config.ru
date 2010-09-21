@@ -1,0 +1,3 @@
+require "threadtag"
+
+run ThreadTag
