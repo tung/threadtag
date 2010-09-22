@@ -4,6 +4,10 @@ gem "sinatra"
 gem "sequel"
 gem "sinatra-sequel"
 
+group :production do
+  gem "pg"
+end
+
 group :development do
   gem "sqlite3-ruby"
 end
