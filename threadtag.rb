@@ -30,6 +30,10 @@ class ThreadTag < Sinatra::Base
     database.drop_table :threadtag
   end
 
+  get '/' do
+    "Nobody's home."
+  end
+
   get '/hi' do
     "Hello world!"
   end

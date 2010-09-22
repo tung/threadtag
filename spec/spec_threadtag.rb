@@ -19,6 +19,11 @@ describe "The ThreadTag App" do
     app.migrate
   end
 
+  it "responds to /" do
+    get '/'
+    last_response.should.be.ok
+  end
+
   it "says hello world" do
     get '/hi'
     last_response.should.be.ok
