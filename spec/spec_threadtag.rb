@@ -23,10 +23,4 @@ describe "The ThreadTag App" do
     get '/'
     last_response.should.be.ok
   end
-
-  it "says hello world" do
-    get '/hi'
-    last_response.should.be.ok
-    last_response.body.should.equal "Hello world!"
-  end
 end

@@ -33,8 +33,4 @@ class ThreadTag < Sinatra::Base
   get '/' do
     "Nobody's home."
   end
-
-  get '/hi' do
-    "Hello world!"
-  end
 end
