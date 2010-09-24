@@ -8,7 +8,7 @@ class Bacon::Context
   include Rack::Test::Methods
 end
 
-describe "The ThreadTag App" do
+describe 'The ThreadTag App' do
   def app
     ThreadTag.set :migrations_log, File.open('/dev/null', 'wb')
     ThreadTag
@@ -19,7 +19,7 @@ describe "The ThreadTag App" do
     app.migrate
   end
 
-  it "responds to /" do
+  it 'should respond to /' do
     get '/'
     last_response.should.be.ok
   end

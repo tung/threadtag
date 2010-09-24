@@ -1,14 +1,14 @@
-require "rubygems"
-require "bundler/setup"
+require 'rubygems'
+require 'bundler/setup'
 
-require "sinatra/base"
-require "sinatra/sequel"
+require 'sinatra/base'
+require 'sinatra/sequel'
 
 class ThreadTag < Sinatra::Base
   register Sinatra::SequelExtension
 
   def self.migrate
-    migration "create threadtag table" do
+    migration 'create threadtag table' do
       database.create_table :threadtag do
         String   :board, :size => 16
         Integer  :thread

@@ -1,3 +1,3 @@
-require "threadtag"
+require 'threadtag'
 
 run ThreadTag
