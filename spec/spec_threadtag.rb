@@ -17,10 +17,22 @@ describe 'The ThreadTag App' do
   before do
     app.nuke_database! rescue nil
     app.migrate
+    @db = app.database
   end
 
   it 'should respond to /' do
     get '/'
     last_response.should.be.ok
+  end
+
+  it 'should list tags for a thread' do
+    @db[:threadtag].insert(:board => 'a', :thread => 1, :tag => 'tag1', :ip => '127.0.0.1', :updated_at => Time.now)
+    @db[:threadtag].insert(:board => 'a', :thread => 1, :tag => 'tag2', :ip => '127.0.0.1', :updated_at => Time.now)
+    @db[:threadtag].insert(:board => 'a', :thread => 1, :tag => 'tag3', :ip => '127.0.0.1', :updated_at => Time.now)
+
+    get '/tags-for/a/1'
+    last_response.body.should.include 'tag1'
+    last_response.body.should.include 'tag2'
+    last_response.body.should.include 'tag3'
   end
 end

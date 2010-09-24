@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'bundler/setup'
 
+require 'haml'
 require 'sinatra/base'
 require 'sinatra/sequel'
 
@@ -32,5 +33,10 @@ class ThreadTag < Sinatra::Base
 
   get '/' do
     "Nobody's home."
+  end
+
+  get '/tags-for/:board/:thread' do
+    @tags = database[:threadtag].select(:tag).where(:board => params[:board], :thread => params[:thread])
+    haml :'tags-for'
   end
 end
