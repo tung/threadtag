@@ -1,6 +1,7 @@
 source "http://rubygems.org"
 
 gem "haml"
+gem "json"
 gem "sinatra"
 gem "sequel"
 gem "sinatra-sequel"

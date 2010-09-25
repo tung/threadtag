@@ -35,4 +35,14 @@ describe 'The ThreadTag App' do
     last_response.body.should.include 'tag2'
     last_response.body.should.include 'tag3'
   end
+
+  it 'should respond in JSON' do
+    @db[:threadtag].insert(:board => 'a', :thread => 1, :tag => 'tag1', :ip => '127.0.0.1', :updated_at => Time.now)
+
+    get '/tags-for/a/1'
+    last_response['Content-Type'].should.equal 'application/json'
+
+    json_response = JSON.parse(last_response.body)
+    json_response[0]['tag'].should.equal 'tag1'
+  end
 end

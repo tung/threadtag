@@ -2,6 +2,7 @@ require 'rubygems'
 require 'bundler/setup'
 
 require 'haml'
+require 'json'
 require 'sinatra/base'
 require 'sinatra/sequel'
 
@@ -36,7 +37,13 @@ class ThreadTag < Sinatra::Base
   end
 
   get '/tags-for/:board/:thread' do
-    @tags = database[:threadtag].select(:tag).where(:board => params[:board], :thread => params[:thread])
-    haml :'tags-for'
+    # JSON response == [{tag: 'tag-name'}, ...]
+    response['Content-Type'] = 'application/json'
+    tag_rows = database[:threadtag].select(:tag).where(:board => params[:board], :thread => params[:thread])
+    tags = []
+    tag_rows.each do |tag_row|
+      tags << { 'tag' => tag_row[:tag] }
+    end
+    JSON.generate tags
   end
 end
