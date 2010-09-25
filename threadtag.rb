@@ -33,7 +33,7 @@ class ThreadTag < Sinatra::Base
   end
 
   get '/' do
-    "Nobody's home."
+    haml :index
   end
 
   get '/tags-for/:board/:thread' do
