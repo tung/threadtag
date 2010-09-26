@@ -18,6 +18,27 @@ describe 'The ThreadTag App' do
     app.nuke_database! rescue nil
     app.migrate
     @db = app.database
+    @tbl = @db[:threadtag]
+  end
+
+  def upvote(board, thread, tag, ip)
+    @tbl.insert(
+      :board => board,
+      :thread => thread,
+      :tag => tag,
+      :ip => ip,
+      :upvote => 1,
+      :updated_at => Time.now)
+  end
+
+  def downvote(board, thread, tag, ip)
+    @tbl.insert(
+      :board => board,
+      :thread => thread,
+      :tag => tag,
+      :ip => ip,
+      :downvote => 1,
+      :updated_at => Time.now)
   end
 
   it 'should respond to /' do
@@ -26,9 +47,9 @@ describe 'The ThreadTag App' do
   end
 
   it 'should list tags for a thread' do
-    @db[:threadtag].insert(:board => 'a', :thread => 1, :tag => 'tag1', :ip => '127.0.0.1', :updated_at => Time.now)
-    @db[:threadtag].insert(:board => 'a', :thread => 1, :tag => 'tag2', :ip => '127.0.0.1', :updated_at => Time.now)
-    @db[:threadtag].insert(:board => 'a', :thread => 1, :tag => 'tag3', :ip => '127.0.0.1', :updated_at => Time.now)
+    upvote('a', 1, 'tag1', '127.0.0.1')
+    upvote('a', 1, 'tag2', '127.0.0.1')
+    upvote('a', 1, 'tag3', '127.0.0.1')
 
     get '/tags-for/a/1'
     last_response.body.should.include 'tag1'
@@ -36,8 +57,28 @@ describe 'The ThreadTag App' do
     last_response.body.should.include 'tag3'
   end
 
+  it 'should list upvotes with tags for a thread' do
+    upvote('a', 1, 'plus-2-minus-1', '127.0.0.1')
+    upvote('a', 1, 'plus-2-minus-1', '127.0.0.2')
+    downvote('a', 1, 'plus-2-minus-1', '127.0.0.3')
+
+    get '/tags-for/a/1'
+    rsp = JSON.parse(last_response.body)
+    rsp[0]['up'].should.equal 2
+  end
+
+  it 'should list downvotes with tags for a thread' do
+    upvote('a', 1, 'plus-1-minus-2', '127.0.0.1')
+    downvote('a', 1, 'plus-1-minus-2', '127.0.0.2')
+    downvote('a', 1, 'plus-1-minus-2', '127.0.0.3')
+
+    get '/tags-for/a/1'
+    rsp = JSON.parse(last_response.body)
+    rsp[0]['down'].should.equal 2
+  end
+
   it 'should respond in JSON' do
-    @db[:threadtag].insert(:board => 'a', :thread => 1, :tag => 'tag1', :ip => '127.0.0.1', :updated_at => Time.now)
+    upvote('a', 1, 'tag1', '127.0.0.1')
 
     get '/tags-for/a/1'
     last_response['Content-Type'].should.equal 'application/json'
