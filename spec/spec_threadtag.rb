@@ -46,6 +46,15 @@ describe 'The ThreadTag App' do
     last_response.should.be.ok
   end
 
+  it 'should respond in JSON' do
+    upvote('a', 1, 'tag1', '127.0.0.1')
+
+    get '/tags-for/a/1'
+    last_response['Content-Type'].should.equal 'application/json'
+    json_response = JSON.parse(last_response.body)
+    json_response[0]['tag'].should.equal 'tag1'
+  end
+
   it 'should list tags for a thread' do
     upvote('a', 1, 'tag1', '127.0.0.1')
     upvote('a', 1, 'tag2', '127.0.0.1')
@@ -77,13 +86,12 @@ describe 'The ThreadTag App' do
     rsp[0]['down'].should.equal 2
   end
 
-  it 'should respond in JSON' do
-    upvote('a', 1, 'tag1', '127.0.0.1')
+  it 'should accept upvotes' do
+    post '/upvote-tag/a/1/tag1'
+    last_response.should.be.ok
 
     get '/tags-for/a/1'
-    last_response['Content-Type'].should.equal 'application/json'
-
-    json_response = JSON.parse(last_response.body)
-    json_response[0]['tag'].should.equal 'tag1'
+    rsp = JSON.parse(last_response.body)
+    rsp[0]['up'].should.equal 1
   end
 end

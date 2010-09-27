@@ -69,4 +69,14 @@ class ThreadTag < Sinatra::Base
     end
     JSON.generate tags
   end
+
+  post '/upvote-tag/:board/:thread/:tag' do
+    @tbl.insert(
+      :board => params[:board],
+      :thread => params[:thread],
+      :tag => params[:tag],
+      :ip => request.ip,
+      :upvote => 1,
+      :updated_at => Time.now)
+  end
 end
