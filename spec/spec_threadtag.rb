@@ -94,4 +94,15 @@ describe 'The ThreadTag App' do
     rsp = JSON.parse(last_response.body)
     rsp[0]['up'].should.equal 1
   end
+
+  it 'should not double-count upvotes from the same IP' do
+    post '/upvote-tag/a/1/tag1'
+    last_response.should.be.ok
+    post '/upvote-tag/a/1/tag1'
+    last_response.should.be.ok
+
+    get '/tags-for/a/1'
+    rsp = JSON.parse(last_response.body)
+    rsp[0]['up'].should.not.equal 2
+  end
 end

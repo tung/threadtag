@@ -71,12 +71,15 @@ class ThreadTag < Sinatra::Base
   end
 
   post '/upvote-tag/:board/:thread/:tag' do
-    @tbl.insert(
-      :board => params[:board],
-      :thread => params[:thread],
-      :tag => params[:tag],
-      :ip => request.ip,
-      :upvote => 1,
-      :updated_at => Time.now)
+    board = params[:board]
+    thread = params[:thread]
+    tag = params[:tag]
+    ip = request.ip
+    updated_at = Time.now
+    if @tbl.
+        where(:board => board, :thread => thread, :tag => tag, :ip => ip).
+        update(:upvote => 1, :downvote => 0, :updated_at => updated_at) < 1
+      @tbl.insert(:board => board, :thread => thread, :tag => tag, :ip => ip, :upvote => 1, :updated_at => updated_at)
+    end
   end
 end
