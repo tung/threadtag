@@ -126,4 +126,16 @@ describe 'The ThreadTag App' do
     rsp[0]['up'].should.not.equal 1
     rsp[0]['down'].should.equal 1
   end
+
+  it 'should register an upvote for a previously downvoted tag' do
+    post '/downvote-tag/a/1/tag1'
+    last_response.should.be.ok
+    post '/upvote-tag/a/1/tag1'
+    last_response.should.be.ok
+
+    get '/tags-for/a/1'
+    rsp = JSON.parse(last_response.body)
+    rsp[0]['up'].should.equal 1
+    rsp[0]['down'].should.not.equal 1
+  end
 end
