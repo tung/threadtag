@@ -38,6 +38,10 @@ class ThreadTag < Sinatra::Base
     database.drop_table :threadtag
   end
 
+  def sanitize_tag(tag)
+    tag.downcase
+  end
+
   before do
     @tbl = database[:threadtag]
   end
@@ -73,7 +77,7 @@ class ThreadTag < Sinatra::Base
   post '/upvote-tag/:board/:thread/:tag' do
     board = params[:board]
     thread = params[:thread]
-    tag = params[:tag]
+    tag = sanitize_tag(params[:tag])
     ip = request.ip
     updated_at = Time.now
     if @tbl.
@@ -86,7 +90,7 @@ class ThreadTag < Sinatra::Base
   post '/downvote-tag/:board/:thread/:tag' do
     board = params[:board]
     thread = params[:thread]
-    tag = params[:tag]
+    tag = sanitize_tag(params[:tag])
     ip = request.ip
     updated_at = Time.now
     if @tbl.

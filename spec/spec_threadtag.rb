@@ -149,4 +149,20 @@ describe 'The ThreadTag App' do
     rsp[0]['up'].should.equal 1
     rsp[0]['down'].should.not.equal 1
   end
+
+  it 'should convert tags to lowercase' do
+    post '/upvote-tag/a/1/A1B2C3'
+    last_response.should.be.ok
+
+    get '/tags-for/a/1'
+    rsp = JSON.parse(last_response.body)
+    rsp[0]['tag'].should.equal 'a1b2c3'
+
+    post '/downvote-tag/b/2/X7Y8Z9'
+    last_response.should.be.ok
+
+    get '/tags-for/b/2'
+    rsp = JSON.parse(last_response.body)
+    rsp[0]['tag'].should.equal 'x7y8z9'
+  end
 end
